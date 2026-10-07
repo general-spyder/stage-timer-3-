@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Stage Timer Output</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  @font-face { font-family: 'Poppins'; src: url('/vendor/poppins/poppins-latin-700-normal.woff2') format('woff2'); font-weight: 700; }
+  @font-face { font-family: 'Montserrat'; src: url('/vendor/montserrat/montserrat-latin-700-normal.woff2') format('woff2'); font-weight: 700; }
+  @font-face { font-family: 'Bebas Neue'; src: url('/vendor/bebas/bebas-neue-latin-400-normal.woff2') format('woff2'); font-weight: 400; }
+  :root { --u: min(1vw, 1.7778vh); --fg: #fff; --bg: #101518;
+    --f-title: 'Poppins', sans-serif; --f-timer: 'Poppins', sans-serif; --f-mod: 'Poppins', sans-serif; --f-date: 'Poppins', sans-serif; }
+  * { box-sizing: border-box; margin: 0; }
+  html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg); cursor: none; }
+  body { display: flex; align-items: center; justify-content: center; }
+  #bg { position: fixed; inset: 0; background-position: center; background-repeat: no-repeat; }
+  .stage { position: relative; width: calc(var(--u) * 100); height: calc(var(--u) * 56.25); color: var(--fg); font-weight: 700; text-transform: uppercase; }
+  .abs { position: absolute; left: 0; right: 0; text-align: center; transform: translateY(-50%); white-space: nowrap; line-height: 1; }
+  #title { top: calc(var(--u) * 10.5); font: 700 calc(var(--u) * 4.1) var(--f-title); }
+  #timer { top: calc(var(--u) * 25.4); font-weight: 700; font: 700 calc(var(--u) * 24) var(--f-timer); font-variant-numeric: tabular-nums; letter-spacing: .01em; }
+  #timer.hot { color: #FF0000; }
+  #timer.timeup { color: #FFBF00; font-size: calc(var(--u) * 17); animation: flash .9s steps(1, end) infinite; }
+  @keyframes flash { 0%, 100% { opacity: 1 } 50% { opacity: 0 } }
+  #bar { position: absolute; left: 23.9%; width: 52.2%; top: calc(var(--u) * 38); height: calc(var(--u) * 3.9);
+    background: rgba(255,255,255,.07); }
+  #fill { position: absolute; inset: 0; background: linear-gradient(90deg, #1ea400 0%, #7fe000 30%, #ffff00 65%, #ff9a00 82%, #FF0000 100%); clip-path: inset(0 100% 0 0); }
+  #thumb { position: absolute; top: -22%; height: 144%; width: calc(var(--u) * 3); border-radius: calc(var(--u) * .7);
+    background: rgba(220, 220, 220, .65); border: calc(var(--u) * .12) solid rgba(255,255,255,.5); left: calc(var(--p, 0) * (100% - var(--u) * 3)); }
+  #moderator { top: calc(var(--u) * 46.4); font: 700 calc(var(--u) * 2.3) var(--f-mod); }
+  #date { position: absolute; right: calc(var(--u) * 1); bottom: calc(var(--u) * 2.4); font: 700 calc(var(--u) * 1.7) var(--f-date); white-space: nowrap; }
+  #logo { position: absolute; left: 5%; top: calc(var(--u) * 3); width: calc(var(--u) * 9.2); height: calc(var(--u) * 9.2); object-fit: contain; display: none; }
+  #next { position: absolute; left: calc(var(--u) * 1.5); bottom: calc(var(--u) * 2.4); font: 700 calc(var(--u) * 1.5) var(--f-mod); opacity: .85; line-height: 1.6; text-align: left; }
+  #next small { display: block; font-size: .8em; opacity: .7; }
+</style>
+</head>
+<body>
+<div id="bg"></div>
+<div class="stage">
+  <img id="logo" alt="">
+  <div id="title" class="abs"></div>
+  <div id="timer" class="abs">00:00</div>
+  <div id="bar"><div id="fill"></div><div id="thumb"></div></div>
+  <div id="moderator" class="abs"></div>
+  <div id="next"></div>
+  <div id="date"></div>
+</div>
+<script src="output.js"></script>
+</body>
+</html>

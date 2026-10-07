@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Stage Timer</title>
+<link rel="stylesheet" href="control.css">
+</head>
+<body>
+<header>
+  <h1>Stage Timer</h1>
+  <nav id="tabs">
+    <button data-tab="timer" class="on">Timer</button>
+    <button data-tab="schedule">Schedule</button>
+    <button data-tab="look">Appearance</button>
+    <button data-tab="account">Account</button>
+    <button data-tab="support">Upgrade</button>
+    <button data-tab="feedback">Feedback</button>
+    <button data-tab="updates">Updates</button>
+  </nav>
+  <span id="badge" class="badge">Free</span>
+</header>
+<div id="toast" role="status"></div>
+
+<main>
+<!-- TIMER -->
+<section id="tab-timer" class="tab on">
+  <div class="cols">
+    <div class="col">
+      <div class="preview"><iframe src="output.html" title="Output preview" tabindex="-1"></iframe></div>
+      <div class="row">
+        <button id="btnStart" class="primary big">Start</button>
+        <button id="btnReset" class="big">Reset</button>
+        <button id="btnMinus">−1 min</button>
+        <button id="btnPlus">+1 min</button>
+        <span id="liveTime" class="live">00:00</span>
+      </div>
+    </div>
+    <div class="col">
+      <h2>Now on stage</h2>
+      <label>Activity title<input id="title" maxlength="80"></label>
+      <label>Moderator name<input id="moderator" maxlength="80"></label>
+      <h2>Countdown length</h2>
+      <div class="row">
+        <label class="sm">Minutes<input id="min" type="number" min="0" max="5999" value="2"></label>
+        <label class="sm">Seconds<input id="sec" type="number" min="0" max="59" value="0"></label>
+        <button id="btnSet" class="primary">Set timer</button>
+      </div>
+      <p class="hint">The timer turns red at 5:00 and shows a flashing TIME UP at 00:00.</p>
+      <h2>Output</h2>
+      <div class="row">
+        <select id="displaySel"></select>
+        <button id="btnOpen" class="primary">Open output</button>
+        <button id="btnClose">Close output</button>
+      </div>
+      <p class="hint">Choose the display connected by HDMI. With one display the output opens in a window; with two it goes fullscreen (press Esc to close).<br>
+      <b>For NDI / OBS / vMix:</b> add a Browser Source with the address <code>http://127.0.0.1:4777/output.html</code>, or capture the output window with NDI Screen Capture.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SCHEDULE -->
+<section id="tab-schedule" class="tab">
+  <h2>Programme schedule</h2>
+  <div class="row add">
+    <label>Title<input id="sTitle" maxlength="80" placeholder="e.g. Praise &amp; Worship"></label>
+    <label>Moderator<input id="sMod" maxlength="80" placeholder="e.g. Rev. Mark Nortey"></label>
+    <label class="sm">Start time<input id="sStart" type="time"></label>
+    <label class="sm">Min<input id="sMin" type="number" min="0" max="5999" value="5"></label>
+    <label class="sm">Sec<input id="sSec" type="number" min="0" max="59" value="0"></label>
+    <button id="sAdd" class="primary">Add activity</button>
+  </div>
+  <div class="row">
+    <button id="sPrev">Previous</button>
+    <button id="sNext" class="primary">Load next</button>
+    <button id="sNextGo">Load next &amp; start</button>
+    <label class="check"><input id="auto" type="checkbox"> Auto-advance 5 seconds after TIME UP</label>
+  </div>
+  <table>
+    <thead><tr><th>Start</th><th>Title</th><th>Moderator</th><th>Length</th><th></th></tr></thead>
+    <tbody id="sBody"></tbody>
+  </table>
+  <p id="sEmpty" class="hint">No activities yet. Add the first item above. The next three show on the output.</p>
+</section>
+
+<!-- APPEARANCE -->
+<section id="tab-look" class="tab">
+  <div class="cols">
+    <div class="col">
+      <h2>Fonts <span id="fontCount" class="muted"></span></h2>
+      <div class="row">
+        <input id="fontPick" list="sysfonts" placeholder="Search installed fonts…">
+        <datalist id="sysfonts"></datalist>
+        <button id="fontAdd" class="primary">Add font</button>
+      </div>
+      <div id="fontChips" class="chips"></div>
+      <h3>Use fonts for</h3>
+      <div class="grid2">
+        <label>Title<select id="fTitle"></select></label>
+        <label>Timer<select id="fTimer"></select></label>
+        <label>Moderator<select id="fModerator"></select></label>
+        <label>Date &amp; time<select id="fDate"></select></label>
+      </div>
+      <label class="sm">Text colour<input id="textColor" type="color" value="#ffffff"></label>
+      <p class="hint">Poppins, Montserrat and Bebas Neue are built in. Add any font installed on this computer (Gotham, Nexa…).</p>
+      <h2>Themes <span id="themeCount" class="muted"></span></h2>
+      <div id="themeChips" class="chips"></div>
+      <div class="row"><input id="thName" placeholder="Theme name" maxlength="30"><label class="sm">Background<input id="thBg" type="color" value="#101518"></label><label class="sm">Text<input id="thFg" type="color" value="#ffffff"></label><button id="thSave" class="primary">Save theme</button></div>
+    </div>
+    <div class="col">
+      <h2>Branding <span class="lock paidOnly">Paid</span></h2>
+      <div class="paidBlock">
+        <label>Logo (PNG, JPG, SVG – max 1 MB)<input id="logoFile" type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml"></label>
+        <button id="logoClear">Remove logo</button>
+        <label class="sm">Background colour<input id="bgColor" type="color" value="#101518"></label>
+        <label>Background image (max 8 MB)<input id="bgFile" type="file" accept="image/png,image/jpeg,image/webp"></label>
+        <div class="row">
+          <select id="bgFit"><option value="cover">Fill screen (crop)</option><option value="contain">Fit inside</option><option value="fill">Stretch</option></select>
+          <button id="bgClear">Remove background image</button>
+        </div>
+      </div>
+      <p id="paidNote" class="hint">Upgrade to unlock your logo, custom background colours and background images, plus up to 20 fonts.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ACCOUNT -->
+<section id="tab-account" class="tab"><div class="cols"><div class="col">
+  <h2>Sign up / Sign in</h2><p id="acctStatus" class="hint">Not signed in</p>
+  <label>Full name<input id="aName" maxlength="80"></label><label>Email (Gmail, iCloud, any)<input id="aEmail" type="email"></label>
+  <div class="row"><button id="aUp" class="primary">Sign up</button><button id="aIn">Sign in</button></div></div>
+  <div class="col"><h2>Language</h2><button id="langChange">Change language</button></div></div></section>
+
+<!-- SUPPORT -->
+<section id="tab-support" class="tab"><div class="cols"><div class="col">
+  <h2>Upgrade to Paid</h2><p class="momo" id="price">…</p>
+  <p class="hint">One-time permanent licence for up to 5 PCs. Unlocks your logo, custom backgrounds, 20 fonts and 20 themes.</p>
+  <label>Full name<input id="pName"></label><label>Country<input id="pCountry" value="Ghana"></label>
+  <label>Email<input id="pEmail" type="email"></label><label>Contact (Mobile Money number)<input id="pPhone" type="tel"></label>
+  <label>Pay with<select id="pNet"><option value="mtn">MTN Mobile Money</option><option value="vod">Telecel Cash</option><option value="atl">AirtelTigo Money</option><option value="card">Visa card</option></select></label>
+  <button id="pay" class="primary">Pay</button><p id="payMsg" class="hint">You will get a debit prompt on your phone. Approve it and your license key is emailed to you. This app never sees card details.</p></div>
+  <div class="col"><h2>License</h2><p id="licStatus">Free version</p>
+  <label>License key<textarea id="licKey" rows="4" placeholder="Paste your license key"></textarea></label>
+  <div class="row"><button id="licGo" class="primary">Activate</button><button id="licOff">Deactivate</button></div>
+  <p class="hint">Activating needs internet once. After that the app runs fully offline.</p></div></div></section>
+
+<!-- FEEDBACK -->
+<section id="tab-feedback" class="tab"><h2>Feedback &amp; suggestions</h2><label>Tell us what to fix or add<textarea id="fbText" rows="7"></textarea></label><button id="fbSend" class="primary">Send</button></section>
+
+<!-- UPDATES -->
+<section id="tab-updates" class="tab"><h2>Software updates</h2><p id="updMsg">Checking is manual.</p><div class="row"><button id="updCheck" class="primary">Check for updates</button><button id="updInstall" style="display:none">Restart &amp; install</button></div><p id="ver" class="hint"></p></section>
+</main>
+<div id="mLang" class="modal"><div><h2>Choose interface language</h2><select id="langSel"></select><p class="hint">Detected from your system. Confirm or change it.</p><button id="langOk" class="primary">Confirm</button></div></div>
+<div id="mSign" class="modal"><div><h2>Create your account</h2><label>Full name<input id="sName" maxlength="80"></label><label>Email<input id="sEmail" type="email"></label><div class="row"><button id="sOk" class="primary">Sign up</button><button id="sSkip">Skip for now</button></div></div></div>
+<script src="control.js"></script>
+</body>
+</html>

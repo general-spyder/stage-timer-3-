@@ -1,0 +1,65 @@
+{
+  "name": "stage-timer",
+  "version": "1.1.0",
+  "description": "Stage production countdown timer with schedule, HDMI output and browser-source output for NDI workflows",
+  "main": "src/main.js",
+  "author": "Stage Timer",
+  "license": "UNLICENSED",
+  "scripts": {
+    "start": "electron .",
+    "keygen:init": "node tools/keygen.js init",
+    "keygen:issue": "node tools/keygen.js issue",
+    "dist:win": "electron-builder --win nsis --x64",
+    "dist:mac": "electron-builder --mac dmg"
+  },
+  "dependencies": {
+    "@fontsource/poppins": "^5.1.0",
+    "font-list": "^1.5.1",
+    "electron-updater": "^6.3.9",
+    "@fontsource/montserrat": "^5.1.0",
+    "@fontsource/bebas-neue": "^5.1.0"
+  },
+  "devDependencies": {
+    "electron": "^33.4.0",
+    "electron-builder": "^25.1.8"
+  },
+  "build": {
+    "appId": "com.stagetimer.app",
+    "productName": "Stage Timer",
+    "files": [
+      "src/**/*",
+      "assets/**/*",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "icon": "build/icon.png"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true
+    },
+    "mac": {
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        }
+      ],
+      "category": "public.app-category.productivity",
+      "icon": "build/icon.png"
+    },
+    "publish": [
+      {
+        "provider": "generic",
+        "url": "https://YOUR-SERVER.example.com/updates/"
+      }
+    ]
+  }
+}
